@@ -21,7 +21,9 @@ function SpendingHistoryPage() {
     try {
       const data = await fetchAPI("/api/shopping-trips");
       const validTrips = data.filter(
-        (trip) => trip.items?.length > 0,
+        (trip) =>
+          trip.items?.length > 0 &&
+          trip.items.some((item) => item.checked),
       );
       setTrips(validTrips);
     } catch (err) {
