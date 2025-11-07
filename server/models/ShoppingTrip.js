@@ -156,8 +156,15 @@ export async function getTripsByDateRange(startDate, endDate) {
     throw new Error("startDate must be before or equal to endDate");
   }
 
-  end.setHours(23, 59, 59, 999);
-  start.setHours(0, 0, 0, 0);
+  const isStartISO = typeof startDate === "string" && startDate.includes("T");
+  const isEndISO = typeof endDate === "string" && endDate.includes("T");
+
+  if (!isStartISO) {
+    start.setHours(0, 0, 0, 0);
+  }
+  if (!isEndISO) {
+    end.setHours(23, 59, 59, 999);
+  }
 
   const query = {
     tripDate: {

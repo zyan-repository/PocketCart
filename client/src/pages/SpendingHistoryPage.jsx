@@ -48,10 +48,21 @@ function SpendingHistoryPage() {
     setLoading(true);
     setError("");
     try {
+      const [startYear, startMonth, startDay] = startDate.split("-").map(Number);
+      const [endYear, endMonth, endDay] = endDate.split("-").map(Number);
+      
+      const start = new Date(startYear, startMonth - 1, startDay, 0, 0, 0, 0);
+      const end = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
+      
       const data = await fetchAPI(
-        `/api/shopping-trips/history?startDate=${startDate}&endDate=${endDate}`,
+        `/api/shopping-trips/history?startDate=${start.toISOString()}&endDate=${end.toISOString()}`,
       );
-      setTrips(data || []);
+      const validTrips = (data || []).filter(
+        (trip) =>
+          trip.items?.length > 0 &&
+          trip.items.some((item) => item.checked),
+      );
+      setTrips(validTrips);
     } catch (err) {
       setError(err.message || "Failed to fetch history");
       setTrips([]);
