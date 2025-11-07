@@ -1,0 +1,253 @@
+.shopping-trip-page {
+  padding: 0;
+}
+
+.error {
+  color: #d32f2f;
+  margin: 0 0 1rem 0;
+  padding: 0.75rem;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin: 0;
+}
+
+.shopping-trip-page__budget-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.shopping-trip-page__budget-section label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0;
+}
+
+.shopping-trip-page__budget-input {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  width: 150px;
+}
+
+.shopping-trip-page__budget-section button {
+  background-color: #2196F3;
+  color: white;
+}
+
+.shopping-trip-page__budget-section button:hover {
+  background-color: #1976D2;
+}
+
+.shopping-trip-page__budget-display {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.shopping-trip-page__budget-display p {
+  margin: 0.5rem 0;
+  font-size: 18px;
+}
+
+.shopping-trip-page__over-budget {
+  color: #d32f2f;
+  margin-left: 0.5rem;
+  font-weight: 500;
+}
+
+.shopping-trip-page__add-item-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.shopping-trip-page__add-item-form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-top: 1rem;
+}
+
+.shopping-trip-page__add-item-form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shopping-trip-page__add-item-form label {
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.shopping-trip-page__item-name-input {
+  min-width: 200px;
+  flex: 1;
+}
+
+.shopping-trip-page__item-price-input {
+  width: 120px;
+}
+
+.shopping-trip-page__item-quantity-input {
+  width: 120px;
+}
+
+.shopping-trip-page__add-item-form button {
+  background-color: #4CAF50;
+  color: white;
+  align-self: flex-end;
+}
+
+.shopping-trip-page__add-item-form button:hover {
+  background-color: #45a049;
+}
+
+.shopping-trip-page__items-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.shopping-trip-page__item-row {
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.shopping-trip-page__item-row:last-child {
+  margin-bottom: 0;
+}
+
+.shopping-trip-page__item-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.shopping-trip-page__item-content input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.shopping-trip-page__item-name {
+  min-width: 150px;
+  flex: 1;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.shopping-trip-page__item-content label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.shopping-trip-page__item-price-input-field {
+  width: 100px;
+  margin-left: 0.5rem;
+}
+
+.shopping-trip-page__item-quantity-input-field {
+  width: 80px;
+  margin-left: 0.5rem;
+}
+
+.shopping-trip-page__item-total {
+  font-weight: 600;
+  font-size: 18px;
+  color: #333;
+  min-width: 80px;
+  text-align: right;
+}
+
+.shopping-trip-page__item-delete-btn {
+  margin-left: auto;
+  background-color: #f44336;
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.shopping-trip-page__item-delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+.shopping-trip-page__checkout-btn {
+  padding: 1rem 2rem;
+  font-size: 18px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 48px;
+}
+
+.shopping-trip-page__checkout-btn:hover {
+  background-color: #45a049;
+}
+
+@media (max-width: 768px) {
+  .shopping-trip-page__budget-section,
+  .shopping-trip-page__add-item-section,
+  .shopping-trip-page__items-section {
+    padding: 1rem;
+  }
+
+  .shopping-trip-page__add-item-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shopping-trip-page__add-item-form > div {
+    width: 100%;
+  }
+
+  .shopping-trip-page__item-name-input,
+  .shopping-trip-page__item-price-input,
+  .shopping-trip-page__item-quantity-input {
+    width: 100%;
+  }
+
+  .shopping-trip-page__item-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .shopping-trip-page__item-name {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .shopping-trip-page__item-delete-btn {
+    margin-left: 0;
+    width: 100%;
+  }
+}

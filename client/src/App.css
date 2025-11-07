@@ -1,0 +1,97 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1.5rem 2rem;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+nav {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+nav button {
+  padding: 0.625rem 1.25rem;
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s, border-color 0.2s;
+  min-height: 44px;
+}
+
+nav button:hover {
+  background-color: #e8e8e8;
+  border-color: #bbb;
+}
+
+nav button:active {
+  background-color: #ddd;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 1rem;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  nav {
+    gap: 0.5rem;
+  }
+
+  nav button {
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+  }
+
+  main {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 0.75rem;
+  }
+
+  header h1 {
+    font-size: 1.25rem;
+  }
+
+  nav button {
+    padding: 0.5rem 0.75rem;
+    font-size: 14px;
+  }
+
+  main {
+    padding: 0.75rem;
+  }
+}
