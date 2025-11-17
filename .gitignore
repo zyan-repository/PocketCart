@@ -68,11 +68,6 @@ web_modules/
 # dotenv environment variable files
 .env
 .env.*
-!.env.example
-
-# Start scripts with sensitive data
-server/start.sh
-server/start-local.sh
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

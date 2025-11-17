@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import { connectToDatabase } from "./config/database.js";
 import shoppingListsRouter from "./routes/shoppingLists.js";
