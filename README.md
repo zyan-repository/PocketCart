@@ -133,12 +133,40 @@ PocketCart/
    npm install
    ```
 
-2. Create a `.env` file:
+2. Set environment variables using `export`:
+
+   **Option 1: Using MongoDB Atlas (Recommended)**
 
    ```bash
-   MONGODB_URI=mongodb://localhost:27017
-   DB_NAME=pocketcart
-   PORT=3000
+   export MONGODB_TYPE=atlas
+   export MONGODB_ATLAS_USERNAME=your_username
+   export MONGODB_ATLAS_PASSWORD=your_password
+   export MONGODB_ATLAS_CLUSTER=your-cluster.mongodb.net
+   export MONGODB_ATLAS_APP_NAME=your-app-name
+   export DB_NAME=pocketcart
+   export PORT=3000
+   export NODE_ENV=development
+   ```
+
+   **Note:** `MONGODB_ATLAS_CLUSTER` and `MONGODB_ATLAS_APP_NAME` are optional. If not set, default values will be used.
+
+   **Option 2: Using Local MongoDB**
+
+   ```bash
+   export MONGODB_TYPE=local
+   export MONGODB_URI=mongodb://localhost:27017
+   export DB_NAME=pocketcart
+   export PORT=3000
+   export NODE_ENV=development
+   ```
+
+   **Quick Start Scripts:**
+   - Use `server/start.sh` for MongoDB Atlas
+   - Use `server/start-local.sh` for local MongoDB
+
+   ```bash
+   chmod +x server/start.sh
+   ./server/start.sh
    ```
 
 3. Start the server:
