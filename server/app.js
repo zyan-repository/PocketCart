@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import { connectToDatabase } from "./config/database.js";
 import shoppingListsRouter from "./routes/shoppingLists.js";
 import shoppingTripsRouter from "./routes/shoppingTrips.js";
@@ -7,6 +8,7 @@ import shoppingTripsRouter from "./routes/shoppingTrips.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/shopping-lists", shoppingListsRouter);
