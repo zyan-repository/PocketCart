@@ -199,6 +199,10 @@ PocketCart/
 - This README was generated with AI assistance, referencing the structure and format from a previous project ([TechTrove](https://github.com/zyan-repository/TechTrove)).
 - Frontend CSS styling and responsive design were enhanced with AI assistance for improved aesthetics and mobile compatibility.
 
+## Live Demo
+
+- **Production URL**: [https://pocketcart.onrender.com/](https://pocketcart.onrender.com/)
+
 ## License
 
 MIT License - see [LICENSE](./LICENSE) file for details
