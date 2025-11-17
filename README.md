@@ -177,13 +177,22 @@ PocketCart/
    npm install
    ```
 
-2. Start the development server:
+2. Configure environment variables (optional):
+
+   The frontend uses environment variables to configure the API base URL:
+   - **Development**: Uses Vite proxy (no configuration needed, `.env` is empty by default)
+   - **Production**: Set `VITE_API_BASE_URL` in `.env.production` (already configured)
+
+   The `.env` file is already created with default development settings.
+   For production builds, the `.env.production` file is used automatically.
+
+3. Start the development server:
 
    ```bash
    npm run dev
    ```
 
-   The frontend will run on `http://localhost:5173`
+   The frontend will run on `http://localhost:5173` and proxy API requests to `http://localhost:3000`
 
 ## AI Usage
 

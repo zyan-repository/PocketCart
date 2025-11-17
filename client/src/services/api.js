@@ -18,6 +18,8 @@ async function handleResponse(response) {
   return response.json();
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+
 export async function fetchAPI(endpoint, options = {}) {
   const config = {
     ...options,
@@ -35,6 +37,10 @@ export async function fetchAPI(endpoint, options = {}) {
     config.body = JSON.stringify(config.body);
   }
 
-  const response = await fetch(endpoint, config);
+  const url = endpoint.startsWith("http")
+    ? endpoint
+    : `${API_BASE_URL}${endpoint}`;
+
+  const response = await fetch(url, config);
   return await handleResponse(response);
 }
