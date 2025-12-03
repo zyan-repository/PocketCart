@@ -181,6 +181,7 @@ PocketCart/
    PORT=3000
    NODE_ENV=development
    SESSION_SECRET=your-session-secret-key
+   ALLOWED_ORIGINS=http://localhost:5173
    ```
 
    **Option 2: Using Local MongoDB**
@@ -192,9 +193,21 @@ PocketCart/
    PORT=3000
    NODE_ENV=development
    SESSION_SECRET=your-session-secret-key
+   ALLOWED_ORIGINS=http://localhost:5173
    ```
 
-   **Note:** `MONGODB_ATLAS_CLUSTER` and `MONGODB_ATLAS_APP_NAME` are optional. If not set, default values will be used.
+   **For Production Deployment:**
+
+   ```bash
+   NODE_ENV=production
+   SESSION_SECRET=your-strong-random-secret-key
+   ALLOWED_ORIGINS=http://localhost:5173,https://pocketcart.onrender.com
+   ```
+
+   **Note:** 
+   - `MONGODB_ATLAS_CLUSTER` and `MONGODB_ATLAS_APP_NAME` are optional. If not set, default values will be used.
+   - `ALLOWED_ORIGINS` is a comma-separated list of allowed frontend origins for CORS. Defaults to `http://localhost:5173` if not set.
+   - `SESSION_SECRET` should be a strong random string (use `openssl rand -hex 32` to generate one).
 
 3. Start the server:
 
@@ -213,14 +226,16 @@ PocketCart/
    npm install
    ```
 
-2. Configure environment variables (optional):
+2. Configure environment variables:
 
    The frontend uses environment variables to configure the API base URL:
-   - **Development**: Uses Vite proxy (no configuration needed, `.env` is empty by default)
-   - **Production**: Set `VITE_API_BASE_URL` in `.env.production` (already configured)
+   - **Development**: The `.env` file is already created and left empty to use Vite proxy (`http://localhost:3000`)
+   - **Production**: The `.env.production` file is already configured with `VITE_API_BASE_URL=https://pocketcart-server.onrender.com`
 
-   The `.env` file is already created with default development settings.
-   For production builds, the `.env.production` file is used automatically.
+   **Note:** 
+   - For local development, leave `.env` empty to use Vite's proxy feature
+   - For production builds, `.env.production` is automatically used by Vite
+   - If you need to change the production backend URL, update `client/.env.production`
 
 3. Start the development server:
 
