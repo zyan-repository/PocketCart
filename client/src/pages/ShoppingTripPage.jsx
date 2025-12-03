@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { fetchAPI } from "../services/api.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import ErrorDisplay from "../components/ErrorDisplay.jsx";
 import Loading from "../components/Loading.jsx";
 import EmptyState from "../components/EmptyState.jsx";
@@ -8,11 +9,9 @@ import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import "./ShoppingTripPage.css";
 
 function ShoppingTripPage() {
+  const { user } = useAuth();
   const [trip, setTrip] = useState(null);
-  const [budget, setBudget] = useState(() => {
-    const saved = localStorage.getItem("pocketcart_budget");
-    return saved ? parseFloat(saved) : 0;
-  });
+  const [budget, setBudget] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [budgetInput, setBudgetInput] = useState("");
@@ -26,10 +25,19 @@ function ShoppingTripPage() {
   }, []);
 
   useEffect(() => {
-    if (budget > 0) {
-      localStorage.setItem("pocketcart_budget", budget.toString());
+    if (user) {
+      const saved = localStorage.getItem(`pocketcart_budget_${user._id}`);
+      setBudget(saved ? parseFloat(saved) : 0);
+    } else {
+      setBudget(0);
     }
-  }, [budget]);
+  }, [user]);
+
+  useEffect(() => {
+    if (budget > 0 && user) {
+      localStorage.setItem(`pocketcart_budget_${user._id}`, budget.toString());
+    }
+  }, [budget, user]);
 
   function calculateTotal() {
     if (!trip || !trip.items) {
@@ -279,10 +287,10 @@ function ShoppingTripPage() {
 
   function handleSetBudget() {
     const amount = parseFloat(budgetInput);
-    if (!isNaN(amount) && amount >= 0) {
+    if (!isNaN(amount) && amount >= 0 && user) {
       setBudget(amount);
       setBudgetInput("");
-      localStorage.setItem("pocketcart_budget", amount.toString());
+      localStorage.setItem(`pocketcart_budget_${user._id}`, amount.toString());
     }
   }
 
