@@ -36,6 +36,8 @@ app.use(express.urlencoded({ extended: true }));
 // Request logging middleware
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
+  console.log("  Request cookies:", req.headers.cookie || "none");
+  console.log("  Request origin:", req.headers.origin || "none");
   next();
 });
 
@@ -50,6 +52,8 @@ async function configureSession() {
     client: client,
     dbName: process.env.DB_NAME || "pocketcart",
     collectionName: "sessions",
+    touchAfter: 24 * 3600,
+    ttl: 24 * 60 * 60,
   });
 
   const isProduction = process.env.NODE_ENV === "production" || process.env.RENDER;
@@ -70,6 +74,20 @@ async function configureSession() {
       },
     }),
   );
+
+  // Session debugging middleware
+  app.use((req, res, next) => {
+    const originalEnd = res.end;
+    res.end = function (...args) {
+      console.log(`  Session ID: ${req.sessionID || "none"}`);
+      console.log(`  Is authenticated: ${req.isAuthenticated ? req.isAuthenticated() : "N/A"}`);
+      console.log(`  Response headers:`, JSON.stringify(res.getHeaders(), null, 2));
+      const setCookie = res.getHeader("set-cookie");
+      console.log(`  Set-Cookie header: ${setCookie || "none"}`);
+      originalEnd.apply(this, args);
+    };
+    next();
+  });
 
   // Initialize Passport (must be after session)
   app.use(passport.initialize());
