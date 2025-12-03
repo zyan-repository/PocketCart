@@ -12,6 +12,9 @@ import authRouter from "./routes/auth.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy for correct cookie handling behind reverse proxy (Render, Cloudflare, etc.)
+app.set("trust proxy", 1);
+
 // CORS configuration for credentials
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
