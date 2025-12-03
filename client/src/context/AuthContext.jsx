@@ -17,8 +17,12 @@ function AuthProvider({ children }) {
       const data = await fetchAPI("/api/auth/user");
       setUser(data.user);
     } catch (error) {
-      console.error("Auth check failed:", error);
-      setUser(null);
+      if (error.status === 401 || error.message.includes("401") || error.message.includes("Not authenticated")) {
+        setUser(null);
+      } else {
+        console.error("Auth check failed:", error);
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }

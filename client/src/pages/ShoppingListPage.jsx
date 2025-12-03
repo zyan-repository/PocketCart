@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { fetchAPI } from "../services/api.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import ErrorDisplay from "../components/ErrorDisplay.jsx";
 import Loading from "../components/Loading.jsx";
 import EmptyState from "../components/EmptyState.jsx";
@@ -8,6 +9,7 @@ import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import "./ShoppingListPage.css";
 
 function ShoppingListPage() {
+  const { logout } = useAuth();
   const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -28,6 +30,10 @@ function ShoppingListPage() {
       const data = await fetchAPI("/api/shopping-lists");
       setLists(data || []);
     } catch (err) {
+      if (err.status === 401) {
+        logout();
+        return;
+      }
       setError(err.message || "Failed to fetch lists");
     } finally {
       setLoading(false);
@@ -51,6 +57,10 @@ function ShoppingListPage() {
       setLists([newList, ...lists]);
       setNewListName("");
     } catch (err) {
+      if (err.status === 401) {
+        logout();
+        return;
+      }
       setError(err.message || "Failed to create list");
     }
   }
@@ -73,6 +83,10 @@ function ShoppingListPage() {
         setSelectedList(null);
       }
     } catch (err) {
+      if (err.status === 401) {
+        logout();
+        return;
+      }
       setError(err.message || "Failed to delete list");
     }
   }
@@ -134,6 +148,10 @@ function ShoppingListPage() {
         }
       }
     } catch (err) {
+      if (err.status === 401) {
+        logout();
+        return;
+      }
       setError(err.message || "Failed to add item");
     }
   }
@@ -172,6 +190,10 @@ function ShoppingListPage() {
         }
       }
     } catch (err) {
+      if (err.status === 401) {
+        logout();
+        return;
+      }
       setError(err.message || "Failed to delete item");
     }
   }
@@ -210,6 +232,10 @@ function ShoppingListPage() {
         }
       }
     } catch (err) {
+      if (err.status === 401) {
+        logout();
+        return;
+      }
       setError(err.message || "Failed to check off item");
     }
   }
@@ -250,6 +276,10 @@ function ShoppingListPage() {
         }
       }
     } catch (err) {
+      if (err.status === 401) {
+        logout();
+        return;
+      }
       setError(err.message || "Failed to check off all items");
     }
   }

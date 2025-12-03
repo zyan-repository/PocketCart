@@ -8,7 +8,9 @@ async function handleResponse(response) {
     } catch {
       errorMessage = errorText || errorMessage;
     }
-    throw new Error(errorMessage);
+    const error = new Error(errorMessage);
+    error.status = response.status;
+    throw error;
   }
 
   if (response.status === 204) {
