@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
+import { fetchAPI } from "../services/api.js";
 
 const AuthContext = createContext(null);
 
@@ -13,16 +14,8 @@ function AuthProvider({ children }) {
 
   async function checkAuth() {
     try {
-      const response = await fetch("/api/auth/user", {
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-      } else {
-        setUser(null);
-      }
+      const data = await fetchAPI("/api/auth/user");
+      setUser(data.user);
     } catch (error) {
       console.error("Auth check failed:", error);
       setUser(null);
@@ -32,52 +25,40 @@ function AuthProvider({ children }) {
   }
 
   async function login(email, password) {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-      credentials: "include",
-    });
+    try {
+      const data = await fetchAPI("/api/auth/login", {
+        method: "POST",
+        body: { email, password },
+      });
 
-    const data = await response.json();
-
-    if (response.ok) {
       setUser(data.user);
       return { success: true };
-    } else {
-      return { success: false, message: data.error };
+    } catch (error) {
+      return { success: false, message: error.message };
     }
   }
 
   async function register(email, password, name) {
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password, name }),
-      credentials: "include",
-    });
+    try {
+      const data = await fetchAPI("/api/auth/register", {
+        method: "POST",
+        body: { email, password, name },
+      });
 
-    const data = await response.json();
-
-    if (response.ok) {
       return { success: true, message: data.message };
-    } else {
-      return { success: false, message: data.error };
+    } catch (error) {
+      return { success: false, message: error.message };
     }
   }
 
   async function logout() {
-    const response = await fetch("/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-
-    if (response.ok) {
+    try {
+      await fetchAPI("/api/auth/logout", {
+        method: "POST",
+      });
       setUser(null);
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   }
 

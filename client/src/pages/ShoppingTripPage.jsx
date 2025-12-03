@@ -54,10 +54,10 @@ function ShoppingTripPage() {
       } else {
         const newTrip = await fetchAPI("/api/shopping-trips", {
           method: "POST",
-          body: JSON.stringify({
+          body: {
             items: [],
             tripDate: new Date().toISOString(),
-          }),
+          },
         });
         setTrip(newTrip);
       }
