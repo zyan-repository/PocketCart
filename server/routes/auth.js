@@ -64,12 +64,16 @@ router.post("/login", (req, res, next) => {
 
         console.log("Session saved, Session ID:", req.sessionID);
         console.log("Cookie will be set:", req.session.cookie);
+        console.log("Response headers before send:", res.getHeaders());
 
         const { password: _password, ...userWithoutPassword } = user;
-        return res.json({
+        
+        res.json({
           message: "Login successful",
           user: userWithoutPassword,
         });
+        
+        console.log("Response headers after send:", res.getHeaders());
       });
     });
   })(req, res, next);
