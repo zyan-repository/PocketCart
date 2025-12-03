@@ -33,6 +33,7 @@ PocketCart is a web application that helps users create shopping lists and track
 - **Database**: MongoDB (native driver)
 - **Frontend**: React (with hooks), Vite
 - **Authentication**: Passport.js (Local Strategy), express-session, bcrypt
+- **Session Storage**: MongoDB (via connect-mongo) - persistent session storage for production
 - **API Communication**: Fetch API (no axios)
 - **Color Theme**: [Cool Caribbean](https://color.adobe.com/explore) from Adobe Color
   - Tags: #aquatic #blue #green #lavender #ocean #sea #summer #tropical #turquoise
@@ -204,10 +205,11 @@ PocketCart/
    ALLOWED_ORIGINS=http://localhost:5173,https://pocketcart.onrender.com
    ```
 
-   **Note:** 
+   **Note:**
    - `MONGODB_ATLAS_CLUSTER` and `MONGODB_ATLAS_APP_NAME` are optional. If not set, default values will be used.
    - `ALLOWED_ORIGINS` is a comma-separated list of allowed frontend origins for CORS. Defaults to `http://localhost:5173` if not set.
    - `SESSION_SECRET` should be a strong random string (use `openssl rand -hex 32` to generate one).
+   - Sessions are stored in MongoDB (collection: `sessions`) for persistence across server restarts, which is essential for production deployments.
 
 3. Start the server:
 
@@ -232,7 +234,7 @@ PocketCart/
    - **Development**: The `.env` file is already created and left empty to use Vite proxy (`http://localhost:3000`)
    - **Production**: The `.env.production` file is already configured with `VITE_API_BASE_URL=https://pocketcart-server.onrender.com`
 
-   **Note:** 
+   **Note:**
    - For local development, leave `.env` empty to use Vite's proxy feature
    - For production builds, `.env.production` is automatically used by Vite
    - If you need to change the production backend URL, update `client/.env.production`
@@ -250,6 +252,7 @@ PocketCart/
 - This README was generated with AI assistance, referencing the structure and format from a previous project ([TechTrove](https://github.com/zyan-repository/TechTrove)).
 - Frontend CSS styling and responsive design were enhanced with AI assistance for improved aesthetics and mobile compatibility.
 - Color theme was applied to all CSS files using AI assistance, based on the "Cool Caribbean" palette from [Adobe Color](https://color.adobe.com/explore).
+- Session management implementation (MongoDB session store with `connect-mongo`) was implemented with AI assistance to replace memory-based sessions for production deployment compatibility.
 
 ## Live Demo
 

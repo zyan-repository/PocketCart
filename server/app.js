@@ -1,9 +1,10 @@
 import "dotenv/config";
 import express from "express";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import cors from "cors";
 import passport from "./config/passport.js";
-import { connectToDatabase } from "./config/database.js";
+import { connectToDatabase, getClient } from "./config/database.js";
 import shoppingListsRouter from "./routes/shoppingLists.js";
 import shoppingTripsRouter from "./routes/shoppingTrips.js";
 import authRouter from "./routes/auth.js";
@@ -32,41 +33,61 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Session configuration
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "pocketcart-secret-key",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
-  }),
-);
-
-// Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Routes
-app.use("/api/auth", authRouter);
-app.use("/api/shopping-lists", shoppingListsRouter);
-app.use("/api/shopping-trips", shoppingTripsRouter);
-
-app.use((_req, res) => {
-  res.status(404).json({ error: "Route not found" });
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
+  next();
 });
 
-app.use((err, _req, res) => {
-  console.error("Error:", err);
-  res.status(500).json({ error: err.message || "Internal server error" });
-});
+// Session configuration with MongoDB store
+let sessionStore = null;
+
+async function configureSession() {
+  await connectToDatabase();
+  const client = getClient();
+
+  sessionStore = MongoStore.create({
+    client: client,
+    dbName: process.env.DB_NAME || "pocketcart",
+    collectionName: "sessions",
+  });
+
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET || "pocketcart-secret-key",
+      resave: false,
+      saveUninitialized: false,
+      store: sessionStore,
+      cookie: {
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      },
+    }),
+  );
+
+  // Initialize Passport (must be after session)
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  // Routes (must be after Passport)
+  app.use("/api/auth", authRouter);
+  app.use("/api/shopping-lists", shoppingListsRouter);
+  app.use("/api/shopping-trips", shoppingTripsRouter);
+
+  app.use((_req, res) => {
+    res.status(404).json({ error: "Route not found" });
+  });
+
+  app.use((err, req, res, next) => {
+    console.error("Error:", err);
+    res.status(500).json({ error: err.message || "Internal server error" });
+  });
+}
 
 async function startServer() {
   try {
-    await connectToDatabase();
+    await configureSession();
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

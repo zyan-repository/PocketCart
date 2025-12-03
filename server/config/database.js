@@ -73,6 +73,13 @@ export const getDatabase = () => {
   return db;
 };
 
+export const getClient = () => {
+  if (!client) {
+    throw new Error("Database not connected. Call connectToDatabase() first.");
+  }
+  return client;
+};
+
 export const closeDatabase = async () => {
   if (client) {
     await client.close();
