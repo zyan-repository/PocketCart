@@ -1,16 +1,47 @@
 import "dotenv/config";
 import express from "express";
+import session from "express-session";
 import cors from "cors";
+import passport from "./config/passport.js";
 import { connectToDatabase } from "./config/database.js";
 import shoppingListsRouter from "./routes/shoppingLists.js";
 import shoppingTripsRouter from "./routes/shoppingTrips.js";
+import authRouter from "./routes/auth.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
+// CORS configuration for credentials
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://pocketcart.onrender.com"],
+    credentials: true,
+  }),
+);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "pocketcart-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  }),
+);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Routes
+app.use("/api/auth", authRouter);
 app.use("/api/shopping-lists", shoppingListsRouter);
 app.use("/api/shopping-trips", shoppingTripsRouter);
 

@@ -20,6 +20,7 @@ PocketCart is a web application that helps users create shopping lists and track
 
 ## Features
 
+- User Authentication (Register/Login/Logout)
 - Shopping List Management (CRUD operations)
 - Real-time Spending Tracking
 - Budget Setting and Monitoring
@@ -31,7 +32,11 @@ PocketCart is a web application that helps users create shopping lists and track
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB (native driver)
 - **Frontend**: React (with hooks), Vite
+- **Authentication**: Passport.js (Local Strategy), express-session, bcrypt
 - **API Communication**: Fetch API (no axios)
+- **Color Theme**: [Cool Caribbean](https://color.adobe.com/explore) from Adobe Color
+  - Tags: #aquatic #blue #green #lavender #ocean #sea #summer #tropical #turquoise
+  - Colors: `#6A8CE8` `#B197FF` `#57DBFF` `#7EE8C6` `#90FF9E`
 
 ## Project Structure
 
@@ -40,26 +45,43 @@ PocketCart/
 ├── client/                # Frontend application
 │   ├── src/
 │   │   ├── pages/        # Page components
+│   │   │   ├── HomePage.jsx
+│   │   │   ├── LoginPage.jsx
+│   │   │   ├── RegisterPage.jsx
 │   │   │   ├── ShoppingListPage.jsx
 │   │   │   ├── ShoppingTripPage.jsx
 │   │   │   └── SpendingHistoryPage.jsx
 │   │   ├── components/   # UI components
+│   │   ├── context/      # React Context (AuthContext)
 │   │   ├── services/     # API service layer
 │   │   └── App.jsx       # Main app component
 │   └── public/           # Static files
 ├── server/                # Backend application
 │   ├── app.js            # Main server file
-│   ├── config/           # Database configuration
+│   ├── config/           # Configuration files
+│   │   ├── database.js   # Database connection
+│   │   └── passport.js   # Passport authentication config
+│   ├── middleware/       # Express middleware
+│   │   └── auth.js       # Authentication middleware
 │   ├── models/           # Data models
 │   │   ├── ShoppingList.js
-│   │   └── ShoppingTrip.js
+│   │   ├── ShoppingTrip.js
+│   │   └── User.js
 │   └── routes/           # API routes
+│       ├── auth.js
 │       ├── shoppingLists.js
 │       └── shoppingTrips.js
 └── DESIGN.md             # Design document
 ```
 
 ## API Endpoints
+
+### Authentication
+
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/logout` - Logout user
+- `GET /api/auth/user` - Get current logged-in user
 
 ### Shopping Lists
 
@@ -122,6 +144,18 @@ PocketCart/
 }
 ```
 
+### users
+
+```json
+{
+  "_id": "ObjectId('...')",
+  "email": "user@example.com",
+  "password": "$2b$10$...(hashed)",
+  "name": "John",
+  "createdAt": "ISODate('...')"
+}
+```
+
 ## Setup Instructions
 
 ### Backend
@@ -146,6 +180,7 @@ PocketCart/
    DB_NAME=pocketcart
    PORT=3000
    NODE_ENV=development
+   SESSION_SECRET=your-session-secret-key
    ```
 
    **Option 2: Using Local MongoDB**
@@ -156,6 +191,7 @@ PocketCart/
    DB_NAME=pocketcart
    PORT=3000
    NODE_ENV=development
+   SESSION_SECRET=your-session-secret-key
    ```
 
    **Note:** `MONGODB_ATLAS_CLUSTER` and `MONGODB_ATLAS_APP_NAME` are optional. If not set, default values will be used.
@@ -198,6 +234,7 @@ PocketCart/
 
 - This README was generated with AI assistance, referencing the structure and format from a previous project ([TechTrove](https://github.com/zyan-repository/TechTrove)).
 - Frontend CSS styling and responsive design were enhanced with AI assistance for improved aesthetics and mobile compatibility.
+- Color theme was applied to all CSS files using AI assistance, based on the "Cool Caribbean" palette from [Adobe Color](https://color.adobe.com/explore).
 
 ## Live Demo
 

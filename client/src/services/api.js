@@ -23,6 +23,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 export async function fetchAPI(endpoint, options = {}) {
   const config = {
     ...options,
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...options.headers,

@@ -4,18 +4,56 @@
   flex-direction: column;
 }
 
+.app.loading-screen {
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6A8CE8 0%, #57DBFF 100%);
+  color: white;
+  font-size: 1.25rem;
+}
+
 header {
   padding: 1.5rem 2rem;
-  background-color: white;
-  border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(135deg, #6A8CE8 0%, #B197FF 100%);
+  border-bottom: none;
+  box-shadow: 0 2px 8px rgba(106, 140, 232, 0.3);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 header h1 {
-  margin: 0 0 1rem 0;
+  margin: 0;
   font-size: 2rem;
   font-weight: 600;
-  color: #333;
+  color: white;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.logout-btn {
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 nav {
@@ -26,9 +64,9 @@ nav {
 
 nav button {
   padding: 0.625rem 1.25rem;
-  background-color: #f5f5f5;
-  color: #333;
-  border: 1px solid #ddd;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 4px;
   font-size: 16px;
   font-weight: 500;
@@ -37,12 +75,12 @@ nav button {
 }
 
 nav button:hover {
-  background-color: #e8e8e8;
-  border-color: #bbb;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 nav button:active {
-  background-color: #ddd;
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 main {

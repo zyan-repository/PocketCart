@@ -66,20 +66,21 @@
 }
 
 .confirm-dialog-confirm {
-  background-color: #4CAF50;
-  color: white;
+  background-color: #7EE8C6;
+  color: #1a5c4a;
 }
 
 .confirm-dialog-confirm:hover {
-  background-color: #45a049;
+  background-color: #6addb8;
 }
 
 .confirm-dialog-confirm.delete {
-  background-color: #f44336;
+  background-color: #e11d48;
+  color: white;
 }
 
 .confirm-dialog-confirm.delete:hover {
-  background-color: #d32f2f;
+  background-color: #c81d43;
 }
 
 @media (max-width: 480px) {
