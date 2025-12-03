@@ -3,13 +3,14 @@ import { ObjectId } from "mongodb";
 
 const COLLECTION_NAME = "shoppingLists";
 
-export async function createShoppingList(listData) {
+export async function createShoppingList(listData, userId) {
   const db = getDatabase();
   const collection = db.collection(COLLECTION_NAME);
 
   const listDocument = {
     name: listData.name,
     items: listData.items || [],
+    userId: ObjectId.createFromHexString(userId),
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -21,12 +22,16 @@ export async function createShoppingList(listData) {
   };
 }
 
-export async function getShoppingListById(id) {
+export async function getShoppingListById(id, userId) {
   try {
     const db = getDatabase();
     const collection = db.collection(COLLECTION_NAME);
     const objectId = ObjectId.createFromHexString(id);
-    const list = await collection.findOne({ _id: objectId });
+    const userIdObject = ObjectId.createFromHexString(userId);
+    const list = await collection.findOne({
+      _id: objectId,
+      userId: userIdObject,
+    });
     return list;
   } catch (error) {
     console.error("Error fetching shopping list by ID:", error);
@@ -34,20 +39,26 @@ export async function getShoppingListById(id) {
   }
 }
 
-export async function getAllShoppingLists() {
+export async function getAllShoppingLists(userId) {
   const db = getDatabase();
   const collection = db.collection(COLLECTION_NAME);
-  const lists = await collection.find({}).sort({ createdAt: -1 }).toArray();
+  const userIdObject = ObjectId.createFromHexString(userId);
+  const lists = await collection
+    .find({ userId: userIdObject })
+    .sort({ createdAt: -1 })
+    .toArray();
   return lists;
 }
 
-export async function updateShoppingList(id, updates) {
+export async function updateShoppingList(id, updates, userId) {
   try {
     const db = getDatabase();
     const collection = db.collection(COLLECTION_NAME);
     const objectId = ObjectId.createFromHexString(id);
+    const userIdObject = ObjectId.createFromHexString(userId);
 
-    const { _id, createdAt: _createdAt, ...safeUpdates } = updates;
+    const { _id, createdAt: _createdAt, userId: _userId, ...safeUpdates } =
+      updates;
 
     const updateData = {
       ...safeUpdates,
@@ -55,7 +66,7 @@ export async function updateShoppingList(id, updates) {
     };
 
     const result = await collection.findOneAndUpdate(
-      { _id: objectId },
+      { _id: objectId, userId: userIdObject },
       { $set: updateData },
     );
 
@@ -66,12 +77,16 @@ export async function updateShoppingList(id, updates) {
   }
 }
 
-export async function deleteShoppingList(id) {
+export async function deleteShoppingList(id, userId) {
   try {
     const db = getDatabase();
     const collection = db.collection(COLLECTION_NAME);
     const objectId = ObjectId.createFromHexString(id);
-    const result = await collection.deleteOne({ _id: objectId });
+    const userIdObject = ObjectId.createFromHexString(userId);
+    const result = await collection.deleteOne({
+      _id: objectId,
+      userId: userIdObject,
+    });
     return result.deletedCount > 0;
   } catch (error) {
     console.error("Error deleting shopping list:", error);

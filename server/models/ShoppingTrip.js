@@ -36,7 +36,7 @@ function calculateTotalAmount(items) {
     }, 0);
 }
 
-export async function createShoppingTrip(tripData) {
+export async function createShoppingTrip(tripData, userId) {
   const items = tripData.items || [];
   validateItems(items);
 
@@ -53,6 +53,7 @@ export async function createShoppingTrip(tripData) {
     items: items,
     totalAmount: totalAmount,
     tripDate: tripData.tripDate ? new Date(tripData.tripDate) : now,
+    userId: ObjectId.createFromHexString(userId),
     createdAt: now,
     updatedAt: now,
   };
@@ -64,12 +65,16 @@ export async function createShoppingTrip(tripData) {
   };
 }
 
-export async function getShoppingTripById(id) {
+export async function getShoppingTripById(id, userId) {
   try {
     const db = getDatabase();
     const collection = db.collection(COLLECTION_NAME);
     const objectId = ObjectId.createFromHexString(id);
-    const trip = await collection.findOne({ _id: objectId });
+    const userIdObject = ObjectId.createFromHexString(userId);
+    const trip = await collection.findOne({
+      _id: objectId,
+      userId: userIdObject,
+    });
     return trip;
   } catch (error) {
     console.error("Error fetching shopping trip by ID:", error);
@@ -77,20 +82,30 @@ export async function getShoppingTripById(id) {
   }
 }
 
-export async function getAllShoppingTrips() {
+export async function getAllShoppingTrips(userId) {
   const db = getDatabase();
   const collection = db.collection(COLLECTION_NAME);
-  const trips = await collection.find({}).sort({ tripDate: -1 }).toArray();
+  const userIdObject = ObjectId.createFromHexString(userId);
+  const trips = await collection
+    .find({ userId: userIdObject })
+    .sort({ tripDate: -1 })
+    .toArray();
   return trips;
 }
 
-export async function updateShoppingTrip(id, updates) {
+export async function updateShoppingTrip(id, updates, userId) {
   try {
     const db = getDatabase();
     const collection = db.collection(COLLECTION_NAME);
     const objectId = ObjectId.createFromHexString(id);
+    const userIdObject = ObjectId.createFromHexString(userId);
 
-    const { _id, createdAt: _createdAt, ...safeUpdates } = updates;
+    const {
+      _id,
+      createdAt: _createdAt,
+      userId: _userId,
+      ...safeUpdates
+    } = updates;
 
     const updateData = {
       ...safeUpdates,
@@ -113,7 +128,7 @@ export async function updateShoppingTrip(id, updates) {
     }
 
     const result = await collection.findOneAndUpdate(
-      { _id: objectId },
+      { _id: objectId, userId: userIdObject },
       { $set: updateData },
     );
 
@@ -124,12 +139,16 @@ export async function updateShoppingTrip(id, updates) {
   }
 }
 
-export async function deleteShoppingTrip(id) {
+export async function deleteShoppingTrip(id, userId) {
   try {
     const db = getDatabase();
     const collection = db.collection(COLLECTION_NAME);
     const objectId = ObjectId.createFromHexString(id);
-    const result = await collection.deleteOne({ _id: objectId });
+    const userIdObject = ObjectId.createFromHexString(userId);
+    const result = await collection.deleteOne({
+      _id: objectId,
+      userId: userIdObject,
+    });
     return result.deletedCount > 0;
   } catch (error) {
     console.error("Error deleting shopping trip:", error);
@@ -137,7 +156,7 @@ export async function deleteShoppingTrip(id) {
   }
 }
 
-export async function getTripsByDateRange(startDate, endDate) {
+export async function getTripsByDateRange(startDate, endDate, userId) {
   if (!startDate || !endDate) {
     throw new Error("startDate and endDate are required");
   }
@@ -166,11 +185,13 @@ export async function getTripsByDateRange(startDate, endDate) {
     end.setHours(23, 59, 59, 999);
   }
 
+  const userIdObject = ObjectId.createFromHexString(userId);
   const query = {
     tripDate: {
       $gte: start,
       $lte: end,
     },
+    userId: userIdObject,
   };
 
   const trips = await collection.find(query).sort({ tripDate: -1 }).toArray();

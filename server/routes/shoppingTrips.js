@@ -7,12 +7,14 @@ import {
   deleteShoppingTrip,
   getTripsByDateRange,
 } from "../models/ShoppingTrip.js";
+import { isAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", isAuthenticated, async (req, res) => {
   try {
-    const trips = await getAllShoppingTrips();
+    const userId = req.user._id.toString();
+    const trips = await getAllShoppingTrips(userId);
     res.json(trips);
   } catch (error) {
     console.error("Error fetching shopping trips:", error);
@@ -20,7 +22,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/history", async (req, res) => {
+router.get("/history", isAuthenticated, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
     if (!startDate || !endDate) {
@@ -28,7 +30,8 @@ router.get("/history", async (req, res) => {
         error: "startDate and endDate query parameters are required",
       });
     }
-    const trips = await getTripsByDateRange(startDate, endDate);
+    const userId = req.user._id.toString();
+    const trips = await getTripsByDateRange(startDate, endDate, userId);
     res.json(trips);
   } catch (error) {
     console.error("Error fetching shopping trips by date range:", error);
@@ -38,10 +41,11 @@ router.get("/history", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
-    const trip = await getShoppingTripById(id);
+    const userId = req.user._id.toString();
+    const trip = await getShoppingTripById(id, userId);
     if (!trip) {
       return res.status(404).json({ error: "Shopping trip not found" });
     }
@@ -52,10 +56,11 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", isAuthenticated, async (req, res) => {
   try {
     const tripData = req.body;
-    const createdTrip = await createShoppingTrip(tripData);
+    const userId = req.user._id.toString();
+    const createdTrip = await createShoppingTrip(tripData, userId);
     res.status(201).json(createdTrip);
   } catch (error) {
     console.error("Error creating shopping trip:", error);
@@ -65,11 +70,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    const result = await updateShoppingTrip(id, updates);
+    const userId = req.user._id.toString();
+    const result = await updateShoppingTrip(id, updates, userId);
     if (!result) {
       return res.status(404).json({ error: "Shopping trip not found" });
     }
@@ -82,10 +88,11 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await deleteShoppingTrip(id);
+    const userId = req.user._id.toString();
+    const deleted = await deleteShoppingTrip(id, userId);
     if (!deleted) {
       return res.status(404).json({ error: "Shopping trip not found" });
     }

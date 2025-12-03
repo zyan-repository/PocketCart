@@ -6,12 +6,14 @@ import {
   updateShoppingList,
   deleteShoppingList,
 } from "../models/ShoppingList.js";
+import { isAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", async (_req, res) => {
+router.get("/", isAuthenticated, async (req, res) => {
   try {
-    const lists = await getAllShoppingLists();
+    const userId = req.user._id.toString();
+    const lists = await getAllShoppingLists(userId);
     res.json(lists);
   } catch (error) {
     console.error("Error fetching shopping lists:", error);
@@ -19,10 +21,11 @@ router.get("/", async (_req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
-    const list = await getShoppingListById(id);
+    const userId = req.user._id.toString();
+    const list = await getShoppingListById(id, userId);
     if (!list) {
       return res.status(404).json({ error: "Shopping list not found" });
     }
@@ -33,10 +36,11 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", isAuthenticated, async (req, res) => {
   try {
     const listData = req.body;
-    const createdList = await createShoppingList(listData);
+    const userId = req.user._id.toString();
+    const createdList = await createShoppingList(listData, userId);
     res.status(201).json(createdList);
   } catch (error) {
     console.error("Error creating shopping list:", error);
@@ -44,11 +48,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    const result = await updateShoppingList(id, updates);
+    const userId = req.user._id.toString();
+    const result = await updateShoppingList(id, updates, userId);
     if (!result) {
       return res.status(404).json({ error: "Shopping list not found" });
     }
@@ -59,10 +64,11 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await deleteShoppingList(id);
+    const userId = req.user._id.toString();
+    const deleted = await deleteShoppingList(id, userId);
     if (!deleted) {
       return res.status(404).json({ error: "Shopping list not found" });
     }
