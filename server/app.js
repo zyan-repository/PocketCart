@@ -36,11 +36,6 @@ app.use(express.urlencoded({ extended: true }));
 // Request logging middleware
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
-  console.log("Cookies:", req.headers.cookie);
-  console.log("Session ID:", req.sessionID);
-  console.log("Is Authenticated:", req.isAuthenticated ? req.isAuthenticated() : "N/A");
-  console.log("Origin:", req.headers.origin);
-  console.log("Referer:", req.headers.referer);
   next();
 });
 
@@ -64,7 +59,7 @@ async function configureSession() {
       name: "connect.sid",
       secret: process.env.SESSION_SECRET || "pocketcart-secret-key",
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true,
       store: sessionStore,
       cookie: {
         secure: isProduction,
@@ -76,27 +71,9 @@ async function configureSession() {
     }),
   );
 
-  console.log("Session configuration:", {
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    NODE_ENV: process.env.NODE_ENV,
-    RENDER: process.env.RENDER,
-  });
-
   // Initialize Passport (must be after session)
   app.use(passport.initialize());
   app.use(passport.session());
-
-  // Debug middleware to check response headers
-  app.use((req, res, next) => {
-    const originalEnd = res.end;
-    res.end = function (...args) {
-      console.log("Response headers:", res.getHeaders());
-      console.log("Set-Cookie header:", res.getHeader("set-cookie"));
-      originalEnd.apply(this, args);
-    };
-    next();
-  });
 
   // Routes (must be after Passport)
   app.use("/api/auth", authRouter);

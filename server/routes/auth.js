@@ -62,18 +62,12 @@ router.post("/login", (req, res, next) => {
           return res.status(500).json({ error: "Failed to save session" });
         }
 
-        console.log("Session saved, Session ID:", req.sessionID);
-        console.log("Cookie will be set:", req.session.cookie);
-        console.log("Response headers before send:", res.getHeaders());
-
         const { password: _password, ...userWithoutPassword } = user;
-        
+
         res.json({
           message: "Login successful",
           user: userWithoutPassword,
         });
-        
-        console.log("Response headers after send:", res.getHeaders());
       });
     });
   })(req, res, next);
