@@ -242,6 +242,15 @@ function ShoppingTripPage() {
     setShowConfirmDialog(false);
     setError("");
     try {
+      if (trip && trip._id) {
+        await fetchAPI(`/api/shopping-trips/${trip._id}`, {
+          method: "PUT",
+          body: {
+            tripDate: new Date().toISOString(),
+          },
+        });
+      }
+
       const newTrip = await fetchAPI("/api/shopping-trips", {
         method: "POST",
         body: {
